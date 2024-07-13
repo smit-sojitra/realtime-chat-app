@@ -41,7 +41,6 @@ export const authOptions:NextAuthOptions = {
                 name:dbUser.name,
                 email:dbUser.email,
                 picture:dbUser.image,
-
             }
         },
         async session({session,token}){
@@ -50,7 +49,6 @@ export const authOptions:NextAuthOptions = {
                 session.user.name = token.name;
                 session.user.email = token.email;
                 session.user.image = token.picture;
-
             }
             return session
         },
@@ -58,5 +56,4 @@ export const authOptions:NextAuthOptions = {
             return '/dashboard'
         }
     }
-
 }
