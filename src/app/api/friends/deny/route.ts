@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import {z} from "zod"
 import { fetchRedis } from "@/helpers/redis";
 import { db } from "@/lib/db";
+import { pusherServer } from "@/lib/pusher";
+import { toPusherKey } from "@/lib/utils";
 export async function POST(req:Request){
     try {
        const session = await getServerSession(authOptions);
@@ -13,7 +15,10 @@ export async function POST(req:Request){
        if(!session){
         return new NextResponse ('Unauthorized access',{status:401})
        } 
-       
+       pusherServer.trigger(toPusherKey(`user:${session.user.id}:incomming_friend_request_count`),
+                            'incomming_friend_request_count',
+                            {}
+                        )
       await db.srem(`user:${session.user.id}:incomming_friend_request`,idToDeny)
       return new NextResponse ('ok')
     } catch (error) {

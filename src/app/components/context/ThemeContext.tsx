@@ -27,7 +27,7 @@ const ThemeProvider = ({ children }: { children: ReactNode }) =>{
         return () => {
             // prefer.removeEventListener('change', preferChange);
         };
-    },[isDark])
+    },[isDark,theme])
     
     const value = {
         theme,

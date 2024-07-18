@@ -1,15 +1,8 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import FriendRequest from '@/app/components/FriendRequest';
 import { fetchRedis } from '@/helpers/redis'
-import { request } from 'http';
 import { getServerSession } from 'next-auth'
 import { notFound } from 'next/navigation';
-import { FC } from 'react'
-
-
-interface pageProps {
-  
-}
 
 const page = async () => {
   const session = await getServerSession(authOptions);
@@ -18,7 +11,7 @@ const page = async () => {
   const incomingFriendRequests = await Promise.all(
     incomingSenderIds.map(async(senderId)=>{
       const sender = await fetchRedis('get',`user:${senderId}`) as string
-      const parsedEmail = await JSON.parse(sender)
+      const parsedEmail = await JSON.parse(sender) 
       return{
         senderId,
         senderEmail:parsedEmail.email

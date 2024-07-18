@@ -1,8 +1,11 @@
 'use client'
+import { pusherClient } from '@/lib/pusher'
+import { toPusherKey } from '@/lib/utils'
 import axios from 'axios'
 import { Check, UserPlus, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 
 interface FriendRequestProps {
     incomingFriendRequests: IncomingFriendRequest[]
@@ -14,10 +17,13 @@ const FriendRequest: FC<FriendRequestProps> = ({ incomingFriendRequests, session
     const router = useRouter()
     const acceptFriend = async (senderId: string) => {
         try {
-            await axios.post('/api/friends/accept',{id:senderId})
+            const response = await axios.post('/api/friends/accept',{id:senderId})
             setFriendRequests((prev) =>
                 prev.filter((request)=>request.senderId!==senderId)
             )
+            if(response.data.ok){
+                toast.success(response.data);
+            }
             router.refresh()  
         } catch (error) {
            console.log('Error accepting request',error) 
@@ -33,8 +39,26 @@ const FriendRequest: FC<FriendRequestProps> = ({ incomingFriendRequests, session
         } catch (error) {
            console.log('Error denying request',error) 
         }
-
     }
+    useEffect(()=>{
+        const friendRequestHandler = ({senderId,senderEmail}:IncomingFriendRequest)=>{
+            setFriendRequests((prev)=>[...prev,{senderId,senderEmail}])
+        }
+        const friendRequest = ()=>{
+            router.refresh()
+        }
+        pusherClient.subscribe(toPusherKey(`user:${sessionId}:incomming_friend_request`))
+        pusherClient.subscribe(toPusherKey(`user:${sessionId}:friends`))
+        pusherClient.bind('incomming_friend_request',friendRequestHandler)
+        pusherClient.bind('new_friend',friendRequest)
+        
+        return ()=>{
+            pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:incomming_friend_request`))
+            pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:friends`))
+            pusherClient.unbind('new_friend',friendRequest)
+            pusherClient.unbind('incomming_friend_request',friendRequestHandler)
+        }
+    },[router,sessionId])
     return (
         <div>
             {

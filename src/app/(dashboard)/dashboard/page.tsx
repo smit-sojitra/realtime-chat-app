@@ -13,8 +13,7 @@ const page: FC<pageProps> = ({}) => {
 // console.log('sesion',getServerSession(authOptions))
   return (
     <div className='bg'>
-      <ToggleSwitch/>
-      
+      {/* <ToggleSwitch/> */}
     </div>
   )
 }

@@ -21,7 +21,7 @@ const page: FC<pageProps> = ({}) => {
       <p className="text-4xl text-center mt-20 signIn-text ">signIn with Google</p>
       <button onClick={signin} className='login-btn w-fit flex justify-center items-center gap-2'>
         <svg className='mr-2 h-6 w-6'
-            aria-Phidden='true'
+            aria-hidden='true'
             focusable='false'
             data-prefix='fab'
             data-icon='github'
