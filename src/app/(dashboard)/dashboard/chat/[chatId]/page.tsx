@@ -28,7 +28,9 @@ export async function generateMetadata({
   
   return { title: `FriendZone | ${chatPartner.name} chat` }
 }
+setTimeout(()=>{
 
+},10000)
 async function getChatMessages(chatId:string) {
   try {
     const results: string[] = await fetchRedis(
@@ -37,13 +39,11 @@ async function getChatMessages(chatId:string) {
       0,
       -1
     )
-
     const dbMessages = results.map((message) => JSON.parse(message) as Message)
 
     const reversedDbMessages = dbMessages.reverse()
 
     const messages = messagearrayValidator.parse(reversedDbMessages)
-    // console.log('messages',messages)
     return messages
   } catch (error) {
     notFound()

@@ -41,11 +41,11 @@ const FriendRequest: FC<FriendRequestProps> = ({ incomingFriendRequests, session
         }
     }
     useEffect(()=>{
+        const friendRequest = (newFriend:User)=>{
+            router.refresh()
+        }
         const friendRequestHandler = ({senderId,senderEmail}:IncomingFriendRequest)=>{
             setFriendRequests((prev)=>[...prev,{senderId,senderEmail}])
-        }
-        const friendRequest = ()=>{
-            router.refresh()
         }
         pusherClient.subscribe(toPusherKey(`user:${sessionId}:incomming_friend_request`))
         pusherClient.subscribe(toPusherKey(`user:${sessionId}:friends`))

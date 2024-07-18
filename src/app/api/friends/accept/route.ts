@@ -31,26 +31,30 @@ export async function POST(req:Request){
       if (!hasFriendRequest) {
         return new NextResponse('Invalid friend request', { status: 402 })
       }
-      pusherServer.trigger(toPusherKey(`user:${idToAdd}:friends`),
+      const[rawUser,rawFriend] = await Promise.all([
+        fetchRedis('get',`user:${session.user.id}`),
+        fetchRedis('get',`user:${idToAdd}`),
+      ]) as [string,string]
+
+      const user = await JSON.parse(rawUser) as User;
+      const friend = await JSON.parse(rawFriend) as User;
+      
+      await Promise.all([
+        pusherServer.trigger(toPusherKey(`user:${idToAdd}:friends`),
                                   'new_friend',
-                                  {}
-                              )
-      pusherServer.trigger(toPusherKey(`user:${session.user.id}:friends`),
+                                  {user}
+                              ),
+        pusherServer.trigger(toPusherKey(`user:${session.user.id}:friends`),
                                   'new_friend',
-                                  {}
-                              )
-      pusherServer.trigger(toPusherKey(`user:${session.user.id}:incomming_friend_request_count`),
-                            'incomming_friend_request_count',
-                            {}
-                        )
-      pusherServer.trigger(toPusherKey(`user:${idToAdd}:incomming_friend_request_count`),
-                            'incomming_friend_request_count',
-                            {}
-                        )
-      await db.sadd(`user:${session.user.id}:friends`,idToAdd)
-      await db.sadd(`user:${idToAdd}:friends`,session.user.id)
-      await db.srem(`user:${session.user.id}:incomming_friend_request`,idToAdd)
-      await db.srem(`user:${idToAdd}:incomming_friend_request`,session.user.id)
+                                  {friend}
+                              ),
+        db.sadd(`user:${session.user.id}:friends`,idToAdd),
+        db.sadd(`user:${idToAdd}:friends`,session.user.id),
+        db.srem(`user:${session.user.id}:incomming_friend_request`,idToAdd),
+        db.srem(`user:${idToAdd}:incomming_friend_request`,session.user.id),
+      ])
+
+      
       return new NextResponse ('ok')
     } catch (error) {
         console.log('Error accepting request',error)

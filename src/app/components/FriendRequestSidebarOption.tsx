@@ -20,19 +20,19 @@ interface FriendRequestSidebarOptionProps {
       const friendRequestHandler = ()=>{
           setUnseenRequestCount((prev)=>prev+1)
       }
-      const friendCountHandler =()=>{
+      const addedFriendHandler =()=>{
         setUnseenRequestCount((prev)=>prev-1)
       }
       pusherClient.subscribe(toPusherKey(`user:${sessionId}:incomming_friend_request`))
       pusherClient.bind('incomming_friend_request',friendRequestHandler)
-      pusherClient.subscribe(toPusherKey(`user:${sessionId}:incomming_friend_request_count`))
-      pusherClient.bind('incomming_friend_request_count',friendCountHandler)
+      pusherClient.subscribe(toPusherKey(`user:${sessionId}:friends`))
+      pusherClient.bind('new_friend',addedFriendHandler)
           
       return ()=>{
           pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:incomming_friend_request`))
           pusherClient.unbind('incomming_friend_request',friendRequestHandler)
-          pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:incomming_friend_request`))
-          pusherClient.unbind('incomming_friend_request_count',friendCountHandler)
+          pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:friends`))
+          pusherClient.unbind('new_friend',addedFriendHandler)
       }
   },[sessionId])  
     

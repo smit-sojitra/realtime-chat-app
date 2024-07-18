@@ -15,8 +15,8 @@ export async function POST(req:Request){
        if(!session){
         return new NextResponse ('Unauthorized access',{status:401})
        } 
-       pusherServer.trigger(toPusherKey(`user:${session.user.id}:incomming_friend_request_count`),
-                            'incomming_friend_request_count',
+       pusherServer.trigger(toPusherKey(`user:${session.user.id}:friends`),
+                            'new_friend',
                             {}
                         )
       await db.srem(`user:${session.user.id}:incomming_friend_request`,idToDeny)

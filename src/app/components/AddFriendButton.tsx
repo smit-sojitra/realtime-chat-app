@@ -15,17 +15,22 @@ type FormData = z.infer<typeof addFriendValidator>
 
 const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
   const [showSuccessState, setShowSuccessState] = useState<boolean>(false)
-
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const {
     register,
     handleSubmit,
     setError,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(addFriendValidator),
+    defaultValues:{
+      email:''
+    }
   })
 
   const addFriend = async (email: string) => {
+    setIsLoading(true)
     try {
       const validatedEmail = addFriendValidator.parse({ email })
 
@@ -33,6 +38,7 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
         email: validatedEmail,
       })
       setShowSuccessState(true)
+      reset()
       toast.success(response.data)
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -46,6 +52,8 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
       }
 
       setError('email', { message: 'Something went wrong.' })
+    }finally{
+      setIsLoading(false)
     }
   }
 
@@ -68,7 +76,7 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
           className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
           placeholder='you@example.com'
         />
-        <Button type='submit'>Add</Button>
+        <Button isLoading={isLoading} disabled={isLoading} type='submit'>{isLoading?'':"Add"}</Button>
       </div>
       <p className='mt-1 text-sm text-red-600'>{errors.email?.message}</p>
       { !errors && showSuccessState ? (
