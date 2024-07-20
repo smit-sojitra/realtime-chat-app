@@ -1,21 +1,27 @@
 'use client'
 
+import { Loader2 } from 'lucide-react'
 import { signIn } from 'next-auth/react'
-import { FC } from 'react'
+import { FC, useState } from 'react'
+import { boolean } from 'zod'
 
 interface pageProps {
   
 }
- const signin = async () =>{
-    try {
-      console.log('first')
-      const res = await signIn('google');
-      console.log('Response',res)
-    } catch (error) {
-        console.log('error',error);
-    }
- }
-const page: FC<pageProps> = ({}) => {
+
+const Page: FC<pageProps> = ({}) => {
+  const [isLoading, setisLoading] = useState<boolean>(false)
+  const signin = async () =>{
+      setisLoading(true);
+      try {
+        const res = await signIn('google');
+        console.log('Response',res)
+      } catch (error) {
+          console.log('error',error);
+      }finally{
+        setisLoading(false);
+      }
+   }
   return (
     <div className='flex flex-col justify-center gap-12 items-center'>
       <p className="text-4xl text-center mt-20 signIn-text ">signIn with Google</p>
@@ -46,6 +52,9 @@ const page: FC<pageProps> = ({}) => {
             />
             <path d='M1 1h22v22H1z' fill='none' />
           </svg>
+          {
+            isLoading?<Loader2 className='animate-spin'/>:''
+          }
         <span className="text-gray-700 font-medium">Sign in with Google</span>
       </button>
 
@@ -54,4 +63,4 @@ const page: FC<pageProps> = ({}) => {
   
 }
 
-export default page
+export default Page

@@ -1,8 +1,9 @@
 type User = {
-    id: string; 
-    name: string; 
-    image: string; 
-    email: string; 
+    id: string 
+    name: string 
+    image: string 
+    email: string 
+    unseen:number
 }
 
 interface Message{
@@ -11,6 +12,7 @@ interface Message{
     receiverId:string
     text:string
     timestamp:number
+    friendId:string
 }
 interface Chat{
     id:string
