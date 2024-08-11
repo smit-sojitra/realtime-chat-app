@@ -1,3 +1,4 @@
+'use client'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import ChatInput from '@/app/components/ChatInput'
 import Messages from '@/app/components/Messages'

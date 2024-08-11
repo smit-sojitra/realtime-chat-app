@@ -45,7 +45,6 @@ const MobileChatLayout: FC<MobileChatLayoutProps> = ({ friends, session, sidebar
       <Transition.Root show={open} as={Fragment}>
         <Dialog as='div' className='relative z-10' onClose={setOpen}>
           <div className='fixed inset-0' />
-
           <div className='fixed inset-0 overflow-hidden'>
             <div className='absolute inset-0 overflow-hidden'>
               <div className='pointer-events-none fixed inset-y-0 left-0 flex max-w-full pr-10'>
