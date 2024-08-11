@@ -15,7 +15,6 @@ const Page: FC<pageProps> = ({}) => {
       setisLoading(true);
       try {
         const res = await signIn('google');
-        console.log('Response',res)
       } catch (error) {
           console.log('error',error);
       }finally{

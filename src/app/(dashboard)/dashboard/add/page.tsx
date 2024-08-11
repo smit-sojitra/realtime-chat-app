@@ -24,7 +24,6 @@ const Page = () => {
                 email:validatedEmail
             })
             setShowSuccessState(true);
-            console.log('add',response)
             toast.success(response.data)
         } catch (error) {
             if(error instanceof z.ZodError){

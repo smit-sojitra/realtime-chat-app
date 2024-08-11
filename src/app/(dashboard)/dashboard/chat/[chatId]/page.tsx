@@ -1,4 +1,3 @@
-'use client'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import ChatInput from '@/app/components/ChatInput'
 import Messages from '@/app/components/Messages'
@@ -9,29 +8,7 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { string } from 'zod'
 
-// The following generateMetadata functiion was written after the video and is purely optional
-export async function generateMetadata({
-  params,
-}: {
-  params: { chatId: string }
-}) {
-  const session = await getServerSession(authOptions)
-  if (!session) notFound()
-  
-  const [userId1, userId2] = params.chatId.split('--')
-  const { user } = session
-  const chatPartnerId = user.id === userId1 ? userId2 : userId1
-  const chatPartnerRaw = (await fetchRedis(
-    'get',
-    `user:${chatPartnerId}`
-  )) as string
-  const chatPartner = JSON.parse(chatPartnerRaw) as User
-  
-  return { title: `FriendZone | ${chatPartner.name} chat` }
-}
-setTimeout(()=>{
 
-},10000)
 async function getChatMessages(chatId:string) {
   try {
     const results: string[] = await fetchRedis(
@@ -47,8 +24,8 @@ async function getChatMessages(chatId:string) {
     const messages = messagearrayValidator.parse(reversedDbMessages)
     return messages
   } catch (error) {
+    console.log('error fetching message',error)
     notFound()
-    // console.log('error fetching message',error)
   }
 }
 interface pageProps {
