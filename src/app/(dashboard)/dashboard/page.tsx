@@ -24,6 +24,7 @@ const page = async() => {
   )
   return (
     <Dashboard friendsWithLastMessage={friendsWithLastMessage} session={session}/>
+
   )
 }
 
