@@ -1,33 +1,28 @@
-'use client'
-
-import { GridBackgroundDemo } from '@/app/components/GridBackgroundDemo'
+import React from "react";
 import { Loader2 } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import { FC, useState } from 'react'
 import { boolean } from 'zod'
-
-interface pageProps {
-  
-}
-
-const Page: FC<pageProps> = ({}) => {
-  const [isLoading, setisLoading] = useState<boolean>(false)
-  const signin = async () =>{
-      setisLoading(true);
-      try {
-        const res = await signIn('google');
-      } catch (error) {
-          console.log('error',error);
-      }finally{
-        setisLoading(false);
-      }
-   }
+export function GridBackgroundDemo() {
+   const [isLoading, setisLoading] = useState<boolean>(false)
+    const signin = async () =>{
+        setisLoading(true);
+        try {
+          const res = await signIn('google');
+        } catch (error) {
+            console.log('error',error);
+        }finally{
+          setisLoading(false);
+        }
+    }
   return (
-    <div className='flex flex-col justify-center gap-12 items-center'>
-      <GridBackgroundDemo>
-      </GridBackgroundDemo>
-      {/* <p className="text-4xl text-center mt-20 signIn-text ">signIn with Google</p> */}
-      {/* <button onClick={signin} className='login-btn w-fit flex justify-center items-center gap-2'>
+    <div className="h-screen w-full dark:bg-black bg-white space-y-10 flex-col  dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex items-center">
+      {/* Radial gradient for the container to give a faded look */}
+      <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+      <p className="text-4xl text-center mt-20 signIn-text text-white opacity-85">Real time chat app</p>
+      <div className="space-y-10 flex flex-col items-center pt-20">
+      <p className="text-3xl text-center mt-20 signIn-text text-white opacity-85">SignIn with Google</p>
+      <button onClick={signin} className='login-btn w-fit flex justify-center items-center gap-2'>
         <svg className='mr-2 h-6 w-6'
             aria-hidden='true'
             focusable='false'
@@ -57,12 +52,10 @@ const Page: FC<pageProps> = ({}) => {
           {
             isLoading?<Loader2 className='animate-spin'/>:''
           }
-        <span className="text-gray-700 font-medium">Sign in with Google</span>
-      </button> */}
-
+        <span className="text-white opacity-70 font-medium">Sign in with Google</span>
+      </button>
+      </div>
+      
     </div>
-  )
-  
+  );
 }
-
-export default Page
